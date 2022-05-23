@@ -1,0 +1,54 @@
+﻿@page "/edit/{id:int}"
+@inject IService productService
+@inject ICategoryService categoryService
+@inject NavigationManager UriHelper
+@if(product != null){
+    <EditForm Model="product" OnValidSubmit="whenSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="mb-2">
+            <label>Name</label>
+            <InputText @bind-Value="product.Name" class="form-control"></InputText>
+            <ValidationMessage For="()=>product.Name" class="text-danger"></ValidationMessage>
+        </div>
+        <div class="mb-2">
+            <label>info</label>
+            <InputText @bind-Value="product.info" class="form-control"></InputText>
+            <ValidationMessage For="()=>product.info" class="text-danger"></ValidationMessage>
+        </div>
+        <div class="mb-2">
+             <label>price</label>
+            <InputNumber @bind-Value="product.price" class="form-control"></InputNumber>
+            <ValidationMessage For="()=>product.price" class="text-danger"></ValidationMessage>
+        </div>
+        <div>
+            <label>category</label>
+            <InputSelect @bind-Value="product.cat_Id" class="form-control">
+                @foreach (var item in categories)
+                   {
+                       <option class="py-2" value="@item.Id">@item.Name</option>
+                   }
+            </InputSelect>
+            <ValidationMessage For="()=>product.cat_Id" class="text-danger"></ValidationMessage>
+
+        </div>
+        <input type="submit" value="Update" class="btn btn-success mt-4">
+</EditForm>
+}
+@code {
+    [Parameter]
+    public int id { set; get; }
+    public Product product { set; get; }
+    public List<Category> categories { set; get; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        product = await productService.GetByID(id);
+        categories = await categoryService.GetAll();
+    }
+    
+    async Task whenSubmit()
+    {
+        await productService.Update(id, product);
+        UriHelper.NavigateTo("Products");
+    }
+}

@@ -1,0 +1,61 @@
+﻿@*
+
+
+
+<select @bind="@d_id" @bind:event="oninput" class="custom-select mb-5" @onchange="showEmps" aria-label="Default select example">
+  @foreach (var item in departments)
+ {
+    <option value="@item.Id">@item.Name</option>
+ }
+</select>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">name</th>
+      <th scope="col">address</th>
+    </tr>
+  </thead>
+  <tbody>
+        @{
+                foreach (var item in employees)
+                {
+                      <tr>
+                          <th>@item.Name</th>
+                          <td>@item.Address</td>
+                     </tr>
+                }
+        }
+  
+  </tbody>
+</table>
+@code {
+    public int d_id;
+    public List<Department> departments = new List<Department>();
+    public List<Employee> employees = new List<Employee>();
+    public Testomponent()
+    {
+        fillData();
+    }
+    void fillData()
+    {
+        departments.Add(new Department { Id = 1, Name = "os", Employees = new List<Employee>
+            {
+                new Employee(){Name="mohammed",Address="alex"},
+                new Employee(){Name="ahmed",Address="cairo"}    
+            }
+        });
+        departments.Add(new Department { Id = 2, Name = "pd", Employees = new List<Employee>
+            {
+                new Employee(){Name="ali",Address="tanta"},
+                new Employee(){Name="mostafa",Address="menufia"}    
+            }
+        });
+    }
+    public void showEmps()
+    {
+        Department chosedDept = departments.Where(d => d.Id == d_id).FirstOrDefault();
+        employees = chosedDept.Employees;
+    }
+}
+*@

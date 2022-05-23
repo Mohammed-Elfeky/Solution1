@@ -1,0 +1,37 @@
+﻿@page "/Products"
+@inject IService productService
+@if (products !=null)
+{
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">name</th>
+      <th scope="col">info</th>
+      <th scope="col">price</th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (var item in products)
+     {
+        <tr>
+          <td>@item.Name</td>
+          <td>@item.info</td>
+          <td>@item.price</td>
+          <td>
+              <a href="/Products/@item.Id"><img style="width:30px" src="/images/@item.image"></a>
+          </td>
+          <td>
+              <a href="/edit/@item.Id">edit</a>
+          </td>
+        </tr>
+     }
+  </tbody>
+</table>
+}
+@code {
+    List<Product> products = new List<Product>();
+    protected async override Task OnInitializedAsync()
+    {
+      products= await productService.GetAll();
+    }
+}

@@ -1,0 +1,29 @@
+﻿@page "/Products/{id:int}"
+@inject IService productService
+@inject ICategoryService categoryService
+
+@if (product !=null)
+{
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="/images/@product.image" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">@product.Name</h5>
+        <p class="card-text">@product.info</p>
+        <p class="card-text">@cat.Name</p>
+        <a href="/Products" class="btn btn-primary">list</a>
+      </div>
+    </div>
+}
+@code {
+
+    [Parameter]
+    public int id { set; get; }
+    public Product product { set; get; }
+    public Category cat{ set; get; }
+    
+    protected async override Task OnInitializedAsync()
+    {
+        product = await productService.GetByID(id);
+        cat = await categoryService.GetByID(product.cat_Id);
+    }
+}
